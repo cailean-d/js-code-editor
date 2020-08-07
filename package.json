@@ -1,0 +1,23 @@
+{
+  "name": "code-editor",
+  "version": "0.1.0",
+  "description": "In-browser code editor",
+  "main": "lib/editor.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "scripts": {
+    "build": "webpack"
+  },
+  "keywords": [
+    "Code Editor"
+  ],
+  "author": {
+    "name": "Lykov Denis",
+    "email": "cailean393@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "webpack": "^4.44.1"
+  }
+}
