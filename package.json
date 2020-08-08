@@ -8,7 +8,9 @@
     "lib": "./lib"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production webpack",
+    "build": "rimraf lib && npm run build:umd && npm run build:browser",
+    "build:umd": "cross-env NODE_ENV=umd webpack",
+    "build:browser": "cross-env NODE_ENV=browser webpack",
     "start": "webpack-dev-server",
     "build-dev": "webpack"
   },
@@ -20,6 +22,10 @@
     "email": "cailean393@gmail.com"
   },
   "license": "MIT",
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.11.1",
     "@babel/preset-env": "^7.11.0",
@@ -32,8 +38,7 @@
     "cross-env": "^7.0.2",
     "css-loader": "^3.6.0",
     "html-webpack-plugin": "^4.3.0",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1",
+    "rimraf": "^3.0.2",
     "style-loader": "^1.2.1",
     "typescript": "^3.9.7",
     "webpack": "^4.44.1",
