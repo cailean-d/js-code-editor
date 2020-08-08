@@ -1,25 +1,35 @@
 const path = require('path');
-
-const production = process.env.NODE_ENV === 'production';
-const obj1 = {
-  path: path.resolve(__dirname, 'lib'),
-  filename: 'editor.umd.js',
-  library: 'editor',
-  libraryTarget:'umd',
-  umdNamedDefine: true
-}
-const obj2 = {
-  path: path.resolve(__dirname, 'dist'),
-  filename: 'dev.js',
-}
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
-  mode: production ? 'production' : 'development',
-  entry: production ? './src/index.tsx' : './src/dev.ts',
-  output: production ? obj1 : obj2,
+  mode: 'development',
+  devtool: 'inline-source-map',
+  entry: './src/development/index.ts',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
+  },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js', '.json' ]
   },
+  devServer: {
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true,
+    port: 5000,
+    noInfo: true,
+    open: true,
+    overlay: true,
+    progress: true,
+  },
+  plugins: [
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src/development/index.html'),
+      inject: true,
+      hash: true,
+    })
+  ],
   module: {
     rules: [
       {

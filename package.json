@@ -1,6 +1,7 @@
 {
   "name": "code-editor",
   "version": "0.1.0",
+  "private": false,
   "description": "In-browser code editor",
   "main": "lib/editor.umd.js",
   "directories": {
@@ -8,7 +9,8 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack",
-    "start": "webpack --watch"
+    "start": "webpack-dev-server",
+    "build-dev": "webpack"
   },
   "keywords": [
     "Code Editor"
@@ -26,12 +28,15 @@
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "babel-loader": "^8.1.0",
+    "clean-webpack-plugin": "^3.0.0",
     "cross-env": "^7.0.2",
-    "css-loader": "^4.2.1",
+    "css-loader": "^3.6.0",
+    "html-webpack-plugin": "^4.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "style-loader": "^1.2.1",
     "typescript": "^3.9.7",
-    "webpack": "^4.44.1"
+    "webpack": "^4.44.1",
+    "webpack-dev-server": "^3.11.0"
   }
 }
