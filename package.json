@@ -2,12 +2,13 @@
   "name": "code-editor",
   "version": "0.1.0",
   "description": "In-browser code editor",
-  "main": "lib/editor.js",
+  "main": "lib/editor.umd.js",
   "directories": {
     "lib": "./lib"
   },
   "scripts": {
-    "build": "webpack"
+    "build": "cross-env NODE_ENV=production webpack",
+    "start": "webpack --watch"
   },
   "keywords": [
     "Code Editor"
@@ -18,6 +19,19 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.11.1",
+    "@babel/preset-env": "^7.11.0",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/preset-typescript": "^7.10.4",
+    "@types/react": "^16.9.44",
+    "@types/react-dom": "^16.9.8",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "css-loader": "^4.2.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "style-loader": "^1.2.1",
+    "typescript": "^3.9.7",
     "webpack": "^4.44.1"
   }
 }

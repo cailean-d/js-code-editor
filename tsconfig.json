@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "allowJs": true,
+    "jsx": "react",
+    "lib": ["dom", "es2017", "DOM.Iterable"],
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+  },
+  "include": ["src"],
+  "exclude": ["src/dev.ts", "node_modules/*"]
+}
