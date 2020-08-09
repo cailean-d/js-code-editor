@@ -8,5 +8,5 @@
     "downlevelIteration": true,
   },
   "include": ["src"],
-  "exclude": ["src/dev.ts", "node_modules/*"]
+  "exclude": ["node_modules/*"]
 }
