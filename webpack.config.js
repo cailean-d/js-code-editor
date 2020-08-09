@@ -16,7 +16,7 @@ const options = {
       libraryTarget:'umd',
       umdNamedDefine: true
     },
-    externals: ['preact'],
+    externals: ['preact', 'mobx'],
   },
   browser: {
     mode: 'production',
@@ -69,11 +69,19 @@ module.exports = {
     rules: [
       {
         test: /\.(m?js|tsx?)$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
+            presets: [
+              ['@babel/preset-env', { targets: "> 0.25%, not dead" }],
+              '@babel/preset-react',
+              '@babel/preset-typescript'
+            ],
+            plugins: [
+              ['@babel/plugin-proposal-decorators', { 'legacy': true }],
+              ['@babel/plugin-proposal-class-properties', { 'loose' : true }]
+            ]
           }
         }
       },
