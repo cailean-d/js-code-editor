@@ -61,6 +61,7 @@ module.exports = {
   resolve: {
     extensions: [ '.tsx', '.ts', '.js', '.json' ],
     alias: {
+      "@": path.resolve(__dirname, 'src'),
       "react": "preact/compat",
       "react-dom": "preact/compat"
     }

@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { ICursor } from './../interfaces/cursor';
+import { ICursor } from '@/interfaces/cursor';
 
 export default class Cursor {
   @observable items: ICursor[] = [];

@@ -1,4 +1,4 @@
-import Cursor from './../store/cursor';
+import Cursor from '@/store/cursor';
 
 export interface IStore {
   cursor: Cursor;

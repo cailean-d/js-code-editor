@@ -6,7 +6,11 @@
     "lib": ["dom", "es2017", "DOM.Iterable"],
     "esModuleInterop": true,
     "downlevelIteration": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules/*"]
