@@ -23,8 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "preact": "^10.4.7"
   },
   "devDependencies": {
     "@babel/core": "^7.11.1",
@@ -38,6 +37,8 @@
     "cross-env": "^7.0.2",
     "css-loader": "^3.6.0",
     "html-webpack-plugin": "^4.3.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "rimraf": "^3.0.2",
     "style-loader": "^1.2.1",
     "typescript": "^3.9.7",

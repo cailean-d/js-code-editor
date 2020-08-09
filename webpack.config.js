@@ -16,7 +16,7 @@ const options = {
       libraryTarget:'umd',
       umdNamedDefine: true
     },
-    externals: ['react', 'react-dom'],
+    externals: ['preact'],
   },
   browser: {
     mode: 'production',
@@ -59,7 +59,11 @@ const options = {
 
 module.exports = {
   resolve: {
-    extensions: [ '.tsx', '.ts', '.js', '.json' ]
+    extensions: [ '.tsx', '.ts', '.js', '.json' ],
+    alias: {
+      "react": "preact/compat",
+      "react-dom": "preact/compat"
+    }
   },
   module: {
     rules: [
@@ -95,7 +99,7 @@ module.exports = {
         exclude: /\.module\.css$/
       },
     ]
-  }
+  },
 };
 
 for (const key of Object.keys(options[mod])) {
