@@ -1,17 +1,12 @@
 import React from 'react';
-import { observer } from 'mobx-react-lite';
-import useStore from '@/hooks/useStore';
+import s from './editor.module.css';
 
-function Editor() {
-  const { cursor } = useStore();
+function Editor({ children }) {
   return (
-    <div style={{padding: '20px'}}>
-      <button onClick={() => cursor.addCursor()} >click me</button>
-      {cursor.items.map(it => (
-        <li>{it.row} {it.column}</li>
-      ))}
+    <div className={s.editor} tabIndex={0}>
+      {children}
     </div>
   )
 }
 
-export default observer(Editor);
+export default Editor;

@@ -1,10 +1,11 @@
 import { observable, action } from 'mobx';
 import { ICursor } from '@/interfaces/cursor';
+import { IStore } from '@/interfaces/store';
 
 export default class Cursor {
   @observable items: ICursor[] = [];
 
-  constructor() {
+  constructor(private store: IStore) {
     this.items.push({ row: 0, column: 0 });
   }
 

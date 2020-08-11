@@ -8,10 +8,11 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "baseUrl": "./",
+    "typeRoots": ["node_modules/@types", "types/**/*"],
     "paths": {
       "@/*": ["src/*"],
     }
   },
-  "include": ["src"],
+  "include": ["src", "types"],
   "exclude": ["node_modules/*"]
 }

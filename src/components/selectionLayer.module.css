@@ -1,0 +1,49 @@
+
+.selectionLayer {
+  pointer-events: none;
+}
+
+.selectedText {
+  background-color: rgba(114, 124, 146, 0.21);
+  position: absolute;
+}
+
+.selectedText.cornerLeftTop {
+  border-top-left-radius: 3px;
+}
+
+.selectedText.cornerLeftBottom {
+  border-bottom-left-radius: 3px;
+}
+
+.selectedText.cornerRightTop {
+  border-top-right-radius: 3px;
+}
+
+.selectedText.cornerRightBottom {
+  border-bottom-right-radius: 3px;
+}
+
+.selectedText .cornerNegative {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+}
+
+.selectedText .cornerNegative.rightBottom {
+  left: 100%;
+  bottom: 0;
+  background: url(assets/corner-right-bottom.svg);
+}
+
+.selectedText .cornerNegative.leftBottom {
+  right: 100%;
+  bottom: 0;
+  background: url(assets/corner-left-bottom.svg);
+}
+
+.selectedText .cornerNegative.rightTop {
+  left: 100%;
+  top: 0;
+  background: url(assets/corner-right-top.svg);
+}

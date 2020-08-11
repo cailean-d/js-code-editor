@@ -1,0 +1,7 @@
+.mainLayer {
+  position: relative;
+  flex-grow: 1;
+  overflow-x: auto;
+  overflow-y: auto;
+  background-color: var(--main-background, #282c34);
+}

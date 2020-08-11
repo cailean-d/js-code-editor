@@ -1,0 +1,16 @@
+.editor {
+  font-family: 'Fira Code', Consolas, 'Courier New', monospace;
+  display: flex;
+  cursor: text;
+  position: relative;
+  font-size: var(--font-size, 14px);
+  outline: none;
+  color: var(--text-color, #abb2bf);
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.editor.focused .cursor {
+  visibility: visible;
+}

@@ -1,0 +1,36 @@
+.cursorLayer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  border: 0;
+  pointer-events: none;
+}
+
+.cursor {
+  width: 2px;
+  height: 1em;
+  cursor: text;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  pointer-events: none;
+  visibility: hidden;
+  animation: blink-animation 1s steps(2, start) infinite;
+}
+
+.cursor:after {
+  content: '';
+  display: block;
+  background-color: #528bff;
+  height: 1.3em;
+  width: 100%;
+  z-index: 2;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
