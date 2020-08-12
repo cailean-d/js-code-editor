@@ -1,4 +1,6 @@
 import './index.css';
+import 'preact/debug';
+import 'preact/devtools';
 import { Editor } from '@/index';
 
 const code = `
