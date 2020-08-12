@@ -11,17 +11,12 @@
   height: 100%;
 }
 
-.editor.focused .cursor {
-  visibility: visible;
-}
-
 .layer {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 5px;
+  top: 5px;
+  bottom: 5px;
+  left: 5px;
+  right: 5px;
 }
 
 .untouchable {

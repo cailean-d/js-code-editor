@@ -34,3 +34,7 @@
     visibility: hidden;
   }
 }
+
+:global(.editor-focused) .cursor {
+  visibility: visible;
+}

@@ -1,8 +1,9 @@
 import React from 'react';
-import MeasureLayer from './measureLayer';
-import TextLayer from './textLayer';
 import BackgroundLayer from './backgroundLayer';
 import ForegroundLayer from './foregroundLayer';
+import MeasureLayer from './measureLayer';
+import TextLayer from './textLayer';
+import CursorLayer from './cursorLayer';
 import s from './mainLayer.module.css';
 
 function MainLayer() {
@@ -13,7 +14,7 @@ function MainLayer() {
       </BackgroundLayer>
       <TextLayer/>
       <ForegroundLayer>
-
+        <CursorLayer/>
       </ForegroundLayer>
     </div>
   )
