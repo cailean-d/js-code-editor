@@ -6,10 +6,127 @@ export default class Cursor {
   @observable items: ICursor[] = [];
 
   constructor(private store: IStore) {
-    this.items.push({ row: 0, column: 0 });
+    this.addCursor(0, 0);
   }
 
-  @action addCursor() {
-    this.items.push({ row: Math.random(), column: Math.random() })
+  isCursorExist(row: number, column: number) {
+    return !!this.items.find(item => item.row === row && item.column === column);
   }
+
+  getCursor(row: number, column: number) {
+    return this.items.find(item => item.row === row && item.column === column);
+  }
+
+  @action addCursor(_row: number, _column: number) {
+    const { row, column } = this.getActualCursorPosition(_row, _column);
+    const isExist = this.isCursorExist(row, column);
+    if (!isExist) {
+      this.items.push({ row, column });
+    }
+  }
+
+  @action setCursor(cursor: ICursor, _row: number, _column: number) {
+    const { row, column } = this.getActualCursorPosition(_row, _column);
+    cursor.row = row;
+    cursor.column = column;
+  }
+
+  @action setCursorRow(cursor: ICursor, row: number) {
+    cursor.row = row;
+  }
+
+  @action setCursorColumn(cursor: ICursor, column: number) {
+    cursor.column = column;
+  }
+
+  @action resetCursorColumn(cursor: ICursor) {
+    cursor.column = 0;
+  }
+
+  @action resetCursorRow(cursor: ICursor) {
+    cursor.row = 0;
+  }
+
+  @action removeCursor(row: number, column: number) {
+    this.items = this.items.filter(item => item.row !== row || item.column !== column);
+  }
+
+  @action removeExtraCursors() {
+    this.items = this.items.slice(0, 1);
+  }
+
+  @action removeAll() {
+    this.items = [];
+  }
+
+  @action increaseAllRows() {
+    for (const cursor of this.items) this.increaseCursorRow(cursor);
+  }
+
+  @action increaseAllColumns() {
+    for (const cursor of this.items) this.increaseCursorColumn(cursor);
+  }
+
+  @action decreaseAllRows() {
+    for (const cursor of this.items) this.decreaseCursorRow(cursor);
+  }
+
+  @action decreaseAllColumns() {
+    for (const cursor of this.items) this.decreaseCursorColumn(cursor);
+  }
+
+  @action increaseCursorRow(cursor: ICursor) {
+    const maxRows = this.store.code.codeLines.length - 1;
+    if (cursor.row < maxRows) {
+      cursor.row++;
+      cursor.column = Math.min(cursor.column, this.store.code.codeLines[cursor.row].length);
+    }
+  }
+
+  @action decreaseCursorRow(cursor: ICursor) {
+    if (cursor.row > 0) {
+      cursor.row--;
+      cursor.column = Math.min(cursor.column, this.store.code.codeLines[cursor.row].length);
+    }
+  }
+
+  @action increaseCursorColumn(cursor: ICursor) {
+    const maxCols = this.store.code.codeLines[cursor.row].length;
+    const maxRow = this.store.code.codeLines.length - 1;
+    if (cursor.column === maxCols && cursor.row !== maxRow) {
+      this.increaseCursorRow(cursor);
+      cursor.column = 0;
+    } else if (cursor.column < maxCols) {
+      cursor.column++;
+    }
+  }
+
+  @action decreaseCursorColumn(cursor: ICursor) {
+    if (cursor.column === 0 && cursor.row > 0) {
+      this.decreaseCursorRow(cursor);
+      cursor.column = this.store.code.codeLines[cursor.row].length;
+    } else if (cursor.column > 0) {
+      cursor.column--;
+    }
+  }
+
+  startCapture(e: MouseEvent) {}
+
+  updateCapture(e: MouseEvent) {}
+
+  stopCapture(e: MouseEvent) {}
+
+  getCursorPositionByCoords(e: MouseEvent) {}
+
+  isCursorIntersectsSelection(cursor: ICursor, selection) {}
+
+  private getActualCursorPosition(row: number, col: number) {
+    const maxRows = this.store.code.codeLines.length - 1;
+    const maxCols = this.store.code.codeLines[row]?.length || this.store.code.codeLines[maxRows].length;
+    return { row: Math.min(maxRows, row), column: Math.min(maxCols, col) };
+  }
+
+  private normalizeRowPosition(row: number) {}
+
+  private normalizeColumnPosition(column: number) {}
 }
