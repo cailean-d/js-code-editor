@@ -1,23 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { observer } from 'mobx-react-lite';
 import s from './cursorLayer.module.css';
 import useStore from '@/hooks/useStore';
+import useResetAnimation from '@/hooks/useResetAnimation';
 
 function CursorLayer() {
-  const [ animation, setAnimation ] = useState('');
   const { cursor, measure } = useStore();
-
-  useEffect(() => {
-    setAnimation('none');
-    const r = requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setAnimation('');
-      })
-    })
-    return () => {
-      cancelAnimationFrame(r);
-    }
-  }, [cursor.items.length])
+  const animation = useResetAnimation([cursor.items.length]);
 
   return (
     <div className={s.cursorLayer}>
