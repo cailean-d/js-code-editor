@@ -25,4 +25,8 @@ export default class Measure {
     }
   }
 
+  @computed get layerHeight(): number {
+    return this.symbolSize.height * this.store.code.codeLines.length;
+  }
+
 }

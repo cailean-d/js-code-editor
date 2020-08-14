@@ -5,8 +5,8 @@
   background-color: var(--gutter-background, #282c34);
   overflow: hidden;
   flex-shrink: 0;
-  padding-bottom: 30px; /* additional space for text scrollbar */
-  margin-bottom: -25px;
+  /* padding-bottom: 30px; additional space for text scrollbar
+  margin-bottom: -25px; */
 
   overflow: scroll;
   overflow-x: hidden;

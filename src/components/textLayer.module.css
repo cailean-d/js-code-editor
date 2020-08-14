@@ -2,3 +2,7 @@
   white-space: pre;
   line-height: 1.3em;
 }
+
+.line:last-child {
+  margin-bottom: 5px;
+}

@@ -4,6 +4,7 @@ import { IStore } from '@/interfaces/store';
 
 export default class Cursor {
   @observable items: ICursor[] = [];
+  @observable captured: ICursor;
 
   constructor(private store: IStore) {
     this.addCursor(0, 0);
@@ -23,6 +24,7 @@ export default class Cursor {
     if (!isExist) {
       this.items.push({ row, column });
     }
+    return this.getCursor(row, column);
   }
 
   @action setCursor(cursor: ICursor, _row: number, _column: number) {
@@ -110,15 +112,25 @@ export default class Cursor {
     }
   }
 
-  startCapture(e: MouseEvent) {}
+  @action startCapture(e: MouseEvent) {
+    const { row, column } = this.getCursorPositionByCoords(e);
+    const cursor = this.getCursor(row, column);
+    if (cursor) {
+      this.captured = cursor;
+    } else {
+      this.captured = this.addCursor(row, column);
+    }
+  }
 
-  updateCapture(e: MouseEvent) {}
+  @action updateCapture(e: MouseEvent) {
+    if (!this.captured) return;
+    const { row, column } = this.getCursorPositionByCoords(e);
+    this.setCursor(this.captured, row, column);
+  }
 
-  stopCapture(e: MouseEvent) {}
-
-  getCursorPositionByCoords(e: MouseEvent) {}
-
-  isCursorIntersectsSelection(cursor: ICursor, selection) {}
+  @action stopCapture(_: MouseEvent) {
+    this.captured = null;
+  }
 
   private getActualCursorPosition(row: number, column: number) {
     const codeLines = this.store.code.codeLines;
@@ -128,6 +140,15 @@ export default class Cursor {
       row: row > 0 ? Math.min(maxRows, row) : 0,
       column: column > 0 ? Math.min(maxCols, column) : 0,
     };
+  }
+
+  private getCursorPositionByCoords(e: MouseEvent) {
+    const textLayerBox = this.store.measure.textLayer.getBoundingClientRect();
+    const x = e.pageX - textLayerBox.left;
+    const y = e.pageY - textLayerBox.top;
+    const row = this.normalizeRowPosition(y / this.store.measure.symbolSize.height);
+    const column = this.normalizeColumnPosition(x / this.store.measure.symbolSize.width);
+    return this.getActualCursorPosition(row, column);
   }
 
   private normalizeRowPosition(row: number) {
@@ -142,4 +163,7 @@ export default class Cursor {
   private normalizeColumnPosition(column: number) {
     return Math.round(column);
   }
+
+  private isCursorIntersectsSelection(cursor: ICursor, selection) {}
+
 }
