@@ -5,9 +5,6 @@
   background-color: var(--gutter-background, #282c34);
   overflow: hidden;
   flex-shrink: 0;
-  /* padding-bottom: 30px; additional space for text scrollbar
-  margin-bottom: -25px; */
-
   overflow: scroll;
   overflow-x: hidden;
 }
@@ -18,3 +15,4 @@
   color: #636d83;
   padding: 0 10px;
 }
+

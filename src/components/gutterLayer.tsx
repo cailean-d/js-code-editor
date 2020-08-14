@@ -9,7 +9,11 @@ function GutterLayer() {
 
   const style = {
     height: measure.symbolSize.height + 'px',
-    width: gutter.width + 'px'
+    width: gutter.width + 'px',
+  }
+
+  const layerStyle = {
+    marginRight: '-' + measure.scrollWidth + 'px',
   }
 
   const handler = (e: React.UIEvent) => {
@@ -21,7 +25,7 @@ function GutterLayer() {
   }, [measure.scrollTop]);
 
   return (
-    <div ref={layerElem} className={s.gutterLayer} onScroll={handler}>
+    <div ref={layerElem} className={s.gutterLayer} onScroll={handler} style={layerStyle}>
       {gutter.lines.map((_, i) => (
         <div className={s.lineNumber} style={style}>{i + 1}</div>
       ))}
