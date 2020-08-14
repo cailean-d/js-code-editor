@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
+import { observer } from 'mobx-react-lite';
 import BackgroundLayer from './backgroundLayer';
 import ForegroundLayer from './foregroundLayer';
 import MeasureLayer from './measureLayer';
 import TextLayer from './textLayer';
 import CursorLayer from './cursorLayer';
+import useStore from '@/hooks/useStore';
 import s from './mainLayer.module.css';
 
 function MainLayer() {
+  const layerElem = useRef<HTMLDivElement>();
+  const { measure } = useStore();
+
+  const handler = (e: React.UIEvent) => {
+    measure.scrollTop = (e.target as HTMLDivElement).scrollTop;
+  }
+
+  useEffect(() => {
+    layerElem.current.scrollTop = measure.scrollTop;
+  }, [measure.scrollTop]);
+
   return (
-    <div className={s.mainLayer}>
+    <div ref={layerElem} className={s.mainLayer} onScroll={handler}>
       <BackgroundLayer>
         <MeasureLayer/>
       </BackgroundLayer>
@@ -20,4 +33,4 @@ function MainLayer() {
   )
 }
 
-export default MainLayer;
+export default observer(MainLayer);

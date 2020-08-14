@@ -9,7 +9,7 @@ function MeasureLayer() {
   const { measure } = useStore();
 
   useEffect(() => {
-    measure.lineElement = lineElem.current;
+    measure.measureElement = lineElem.current;
   }, [lineElem.current])
 
   return (
