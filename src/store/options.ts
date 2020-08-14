@@ -1,4 +1,4 @@
-import { observable, action, autorun } from 'mobx';
+import { observable, action } from 'mobx';
 import { IOptions } from '@/interfaces/options';
 import { IStore } from '@/interfaces/store';
 

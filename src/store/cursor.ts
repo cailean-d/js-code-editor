@@ -120,13 +120,26 @@ export default class Cursor {
 
   isCursorIntersectsSelection(cursor: ICursor, selection) {}
 
-  private getActualCursorPosition(row: number, col: number) {
+  private getActualCursorPosition(row: number, column: number) {
+    const codeLines = this.store.code.codeLines;
     const maxRows = this.store.code.codeLines.length - 1;
-    const maxCols = this.store.code.codeLines[row]?.length || this.store.code.codeLines[maxRows].length;
-    return { row: Math.min(maxRows, row), column: Math.min(maxCols, col) };
+    const maxCols = codeLines[row]?.length || codeLines[maxRows].length;
+    return {
+      row: row > 0 ? Math.min(maxRows, row) : 0,
+      column: column > 0 ? Math.min(maxCols, column) : 0,
+    };
   }
 
-  private normalizeRowPosition(row: number) {}
+  private normalizeRowPosition(row: number) {
+    const floatPart = +(row % 1).toFixed(1) * 10;
+    if (floatPart > 7) {
+      return Math.ceil(row);
+    } else {
+      return Math.floor(row);
+    }
+  }
 
-  private normalizeColumnPosition(column: number) {}
+  private normalizeColumnPosition(column: number) {
+    return Math.round(column);
+  }
 }
