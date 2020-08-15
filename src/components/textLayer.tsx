@@ -6,21 +6,28 @@ import useStore from '@/hooks/useStore';
 
 function TextLayer() {
   const layerElem = useRef<HTMLDivElement>();
-  const { measure, code, cursor } = useStore();
+  const { measure, code, cursor, selection } = useStore();
 
   const captureStart = (e: MouseEvent) => {
     if (e.which !== 1 || !measure.textLayer.contains(e.target as Node)) return;
-    if (!e.ctrlKey) cursor.removeAll();
+    if (!e.ctrlKey) {
+      cursor.removeAll();
+      selection.removeAll();
+    }
     cursor.startCapture(e);
+    selection.startCapture(e);
   }
 
   const captureUpdate = (e: MouseEvent) => {
+    e.preventDefault();
     if (e.which !== 1 || !measure.textLayer.contains(e.target as Node)) return;
     cursor.updateCapture(e);
+    selection.updateCapture(e);
   }
 
   const captureStop = (e: MouseEvent) => {
     cursor.stopCapture(e);
+    selection.stopCapture(e);
   }
 
   useEffect(() => {

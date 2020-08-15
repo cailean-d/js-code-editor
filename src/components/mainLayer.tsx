@@ -5,6 +5,7 @@ import ForegroundLayer from './foregroundLayer';
 import MeasureLayer from './measureLayer';
 import TextLayer from './textLayer';
 import CursorLayer from './cursorLayer';
+import SelectionLayer from './selectionLayer';
 import useStore from '@/hooks/useStore';
 import s from './mainLayer.module.css';
 
@@ -27,6 +28,7 @@ function MainLayer() {
       </BackgroundLayer>
       <TextLayer/>
       <ForegroundLayer>
+        <SelectionLayer/>
         <CursorLayer/>
       </ForegroundLayer>
     </div>

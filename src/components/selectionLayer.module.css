@@ -1,4 +1,3 @@
-
 .selectionLayer {
   pointer-events: none;
 }
@@ -33,17 +32,17 @@
 .selectedText .cornerNegative.rightBottom {
   left: 100%;
   bottom: 0;
-  background: url(assets/corner-right-bottom.svg);
+  /* background: url(assets/corner-right-bottom.svg); */
 }
 
 .selectedText .cornerNegative.leftBottom {
   right: 100%;
   bottom: 0;
-  background: url(assets/corner-left-bottom.svg);
+  /* background: url(assets/corner-left-bottom.svg); */
 }
 
 .selectedText .cornerNegative.rightTop {
   left: 100%;
   top: 0;
-  background: url(assets/corner-right-top.svg);
+  /* background: url(assets/corner-right-top.svg); */
 }

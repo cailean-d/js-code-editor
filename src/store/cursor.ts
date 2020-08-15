@@ -11,7 +11,7 @@ export default class Cursor {
   }
 
   isCursorExist(row: number, column: number) {
-    return !!this.items.find(item => item.row === row && item.column === column);
+    return this.items.some(item => item.row === row && item.column === column);
   }
 
   getCursor(row: number, column: number) {
@@ -132,7 +132,7 @@ export default class Cursor {
     this.captured = null;
   }
 
-  private getActualCursorPosition(row: number, column: number) {
+  getActualCursorPosition(row: number, column: number) {
     const codeLines = this.store.code.codeLines;
     const maxRows = this.store.code.codeLines.length - 1;
     const maxCols = codeLines[row]?.length || codeLines[maxRows].length;
@@ -142,7 +142,7 @@ export default class Cursor {
     };
   }
 
-  private getCursorPositionByCoords(e: MouseEvent) {
+  getCursorPositionByCoords(e: MouseEvent) {
     const textLayerBox = this.store.measure.textLayer.getBoundingClientRect();
     const x = e.pageX - textLayerBox.left;
     const y = e.pageY - textLayerBox.top;

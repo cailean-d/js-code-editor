@@ -5,6 +5,7 @@ import Options from '@/store/options';
 import Measure from '@/store/measure';
 import Code from '@/store/code';
 import Gutter from '@/store/gutter';
+import Selection from '@/store/selection';
 
 export const StoreContext = React.createContext<IStore>(null);
 
@@ -15,5 +16,6 @@ export function createStore(): IStore {
   store.code = new Code(store);
   store.gutter = new Gutter(store);
   store.cursor = new Cursor(store);
+  store.selection = new Selection(store);
   return store;
 }
