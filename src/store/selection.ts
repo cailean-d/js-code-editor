@@ -135,6 +135,10 @@ export default class Selection {
     this.items = [];
   }
 
+  @action clearSelectionText() {
+
+  }
+
   @action startCapture(e: MouseEvent) {
     const pos = this.store.cursor.getCursorPositionByCoords(e);
     this.items.push({ start: pos, end: pos, length: 0, lines: [] });
@@ -171,5 +175,9 @@ export default class Selection {
       index++;
     }
     return { row: index, column: start };
+  }
+
+  private getSelectionCursor() {
+
   }
 }

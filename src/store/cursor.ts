@@ -191,6 +191,7 @@ export default class Cursor {
     return Math.round(column);
   }
 
-  private isCursorIntersectsSelection(cursor: ICursor, selection) {}
+  private isCursorIntersectsSelection(cursor: ICursor, selection) {
 
+  }
 }

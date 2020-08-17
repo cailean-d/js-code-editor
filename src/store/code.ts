@@ -2,6 +2,7 @@ import { observable, computed, autorun, action } from 'mobx';
 import { IStore } from '@/interfaces/store';
 import { IPosition } from '@/interfaces/measure';
 import { range } from '@/utils/range';
+import { ICursor } from '@/interfaces/cursor';
 
 export default class Code {
   @observable codeLines: string[];
@@ -39,9 +40,9 @@ export default class Code {
     return this.codeLines.join('').length;
   }
 
-  @action insertText(text: string) {
+  @action inputText(text: string) {
     if (this.store.selection.hasSelection) {
-      // TODO: clear selections
+      this.store.selection.clearSelectionText();
     }
     for (const cursor of this.store.cursor.items) {
       const line = this.codeLines[cursor.row];
@@ -56,7 +57,7 @@ export default class Code {
 
   @action newline() {
     if (this.store.selection.hasSelection) {
-      // TODO: clear selections
+      this.store.selection.clearSelectionText();
     }
     for (const cursor of this.store.cursor.items) {
       const line = this.codeLines[cursor.row];
@@ -71,8 +72,8 @@ export default class Code {
 
   @action removeText() {
     if (this.store.selection.hasSelection) {
-      // TODO: clear selections
-      // return
+      this.store.selection.clearSelectionText();
+      return;
     }
     for (const cursor of this.store.cursor.items) {
       const isStartOfLine = cursor.column === 0;
@@ -97,8 +98,33 @@ export default class Code {
     }
   }
 
-  @action indentIn() {}
-  @action indentOut() {}
+  @action indentIn() {
+    if (this.store.selection.hasSelection) {
+      this.store.selection.clearSelectionText();
+    }
+    for (const cursor of this.store.cursor.items) {
+      const newCursorPos = this.normalizeIndentIn(cursor);
+      const spaces = ' '.repeat(newCursorPos - cursor.column);
+      const line = this.codeLines[cursor.row];
+      const { newLine } = this.splitLine(line, cursor.column, cursor.column, spaces);
+      this.codeLines[cursor.row] = newLine;
+      this.store.cursor.setCursorColumn(cursor, newCursorPos);
+    }
+  }
+
+  @action indentOut() {
+    if (this.store.selection.hasSelection) {
+      this.store.selection.clearSelectionText();
+    }
+    for (const cursor of this.store.cursor.items) {
+      const delSpaces = this.normalizeIndentOut(cursor);
+      if (delSpaces > 0) {
+        const line = this.codeLines[cursor.row];
+        this.codeLines[cursor.row] = line.substring(delSpaces);
+        this.store.cursor.setCursorColumn(cursor, cursor.column - delSpaces);
+      }
+    }
+  }
 
   private splitLine(line: string, pos1: number, pos2: number, text: string) {
     const s1 = line.substring(0, pos1);
@@ -108,5 +134,17 @@ export default class Code {
       substr1: s1,
       substr2: s2,
     }
+  }
+
+  private normalizeIndentIn(cursor: ICursor) {
+    return Math.floor(cursor.column / 2) * 2 + 2;
+  }
+
+  private normalizeIndentOut(cursor: ICursor) {
+    const firstNonSpace = this.codeLines[cursor.row].search(/\S/);
+    const textStartPos = firstNonSpace >= 0 ? firstNonSpace : this.codeLines[cursor.row].length;
+    const newPos = Math.ceil(textStartPos / 2) * 2 - 2;
+    const delSpaces = newPos >= 0 ? textStartPos - newPos : 0;
+    return delSpaces;
   }
 }
