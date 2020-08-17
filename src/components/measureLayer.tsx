@@ -9,13 +9,8 @@ function MeasureLayer() {
   const scrollElem = useRef<HTMLDivElement>();
   const { measure } = useStore();
 
-  useEffect(() => {
-    measure.measureElement = lineElem.current;
-  }, [lineElem.current])
-
-  useEffect(() => {
-    measure.measureScrollElement = scrollElem.current;
-  }, [scrollElem.current])
+  useEffect(() => { measure.measureElement = lineElem.current }, [lineElem.current])
+  useEffect(() => { measure.measureScrollElement = scrollElem.current }, [scrollElem.current])
 
   return (
     <div className={s2.measureLayer}>

@@ -6,6 +6,7 @@ import MeasureLayer from './measureLayer';
 import TextLayer from './textLayer';
 import CursorLayer from './cursorLayer';
 import SelectionLayer from './selectionLayer';
+import InputLayer from './inputLayer';
 import useStore from '@/hooks/useStore';
 import s from './mainLayer.module.css';
 
@@ -25,6 +26,7 @@ function MainLayer() {
     <div ref={layerElem} className={s.mainLayer} onScroll={handler}>
       <BackgroundLayer>
         <MeasureLayer/>
+        <InputLayer/>
       </BackgroundLayer>
       <TextLayer/>
       <ForegroundLayer>

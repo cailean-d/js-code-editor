@@ -1,4 +1,4 @@
-import { observable, action } from 'mobx';
+import { observable, action, computed } from 'mobx';
 import { ICursor } from '@/interfaces/cursor';
 import { IStore } from '@/interfaces/store';
 
@@ -16,6 +16,11 @@ export default class Cursor {
 
   getCursor(row: number, column: number) {
     return this.items.find(item => item.row === row && item.column === column);
+  }
+
+  @computed get upperCursor() {
+    const predicate = (prev: ICursor, curr: ICursor) => curr.row < prev.row ? curr : prev;
+    return this.items.length && this.items.reduce(predicate, this.items[0]);
   }
 
   @action addCursor(_row: number, _column: number) {

@@ -7,6 +7,8 @@ export default class Measure {
   @observable measureElement: HTMLElement;
   @observable measureScrollElement: HTMLElement;
   @observable textLayer: HTMLElement;
+  @observable inputElement: HTMLElement;
+  @observable editorElement: HTMLElement;
   @observable scrollTop: number;
 
   constructor(private store: IStore) {}

@@ -1,22 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
+import { observer } from 'mobx-react-lite';
+import useStore from '@/hooks/useStore';
 import s from './editor.module.css';
 
 function Editor({ children }) {
   const elem = useRef<HTMLDivElement>();
+  const { measure } = useStore();
 
-  function focus() {
-    elem.current.classList.add('editor-focused');
-  }
+  useEffect(() => { measure.editorElement = elem.current }, [elem.current]);
+  useEffect(() => { measure.inputElement?.focus() }, [measure.inputElement]);
 
-  function blur() {
-    elem.current.classList.remove('editor-focused');
-  }
+  const focus = () => measure.inputElement?.focus();
 
   return (
-    <div ref={elem} onFocus={focus} onBlur={blur} className={s.editor} tabIndex={0}>
+    <div ref={elem} onFocus={focus} className={s.editor} tabIndex={0}>
       {children}
     </div>
   )
 }
 
-export default Editor;
+export default observer(Editor);
