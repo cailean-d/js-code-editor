@@ -1,6 +1,7 @@
 import { observable, action, computed } from 'mobx';
 import { ICursor } from '@/interfaces/cursor';
 import { IStore } from '@/interfaces/store';
+import { range } from '@/utils/range';
 
 export default class Cursor {
   @observable items: ICursor[] = [];
@@ -137,10 +138,31 @@ export default class Cursor {
     this.captured = null;
   }
 
+  @action rebaseCursors(_cursor: ICursor, row: number, column: number) {
+    const index = this.items.indexOf(_cursor);
+    for (const cursor of this.items.slice(index + 1)) {
+      if (cursor.row === _cursor.row) {
+        for (const _ of range(0, Math.abs(column))) {
+          if (column > 0)
+            this.increaseCursorColumn(cursor);
+          else
+            this.decreaseCursorColumn(cursor);
+        }
+      }
+      for (const _ of range(0, Math.abs(row))) {
+        if (row > 0)
+          this.increaseCursorRow(cursor);
+        else
+          this.decreaseCursorRow(cursor);
+      }
+    }
+  }
+
   getActualCursorPosition(row: number, column: number) {
     const codeLines = this.store.code.codeLines;
+    const len = codeLines.length;
     const maxRows = this.store.code.codeLines.length - 1;
-    const maxCols = codeLines[row]?.length || codeLines[maxRows].length;
+    const maxCols = row < len ? codeLines[row].length : codeLines[maxRows].length;
     return {
       row: row > 0 ? Math.min(maxRows, row) : 0,
       column: column > 0 ? Math.min(maxCols, column) : 0,
