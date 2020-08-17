@@ -18,9 +18,7 @@ function MainLayer() {
     measure.scrollTop = (e.target as HTMLDivElement).scrollTop;
   }
 
-  useEffect(() => {
-    layerElem.current.scrollTop = measure.scrollTop;
-  }, [measure.scrollTop]);
+  useEffect(() => { layerElem.current.scrollTop = measure.scrollTop }, [measure.scrollTop]);
 
   return (
     <div ref={layerElem} className={s.mainLayer} onScroll={handler}>

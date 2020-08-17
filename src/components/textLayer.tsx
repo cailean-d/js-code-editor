@@ -6,10 +6,10 @@ import useStore from '@/hooks/useStore';
 
 function TextLayer() {
   const layerElem = useRef<HTMLDivElement>();
-  const { measure, code, cursor, selection } = useStore();
+  const { measure, code, cursor, selection, reference } = useStore();
 
   const captureStart = (e: MouseEvent) => {
-    if (e.which !== 1 || !measure.textLayer.contains(e.target as Node)) return;
+    if (e.which !== 1 || !layerElem.current.contains(e.target as Node)) return;
     if (!e.ctrlKey) {
       cursor.removeAll();
       selection.removeAll();
@@ -20,7 +20,7 @@ function TextLayer() {
 
   const captureUpdate = (e: MouseEvent) => {
     e.preventDefault();
-    if (e.which !== 1 || !measure.textLayer.contains(e.target as Node)) return;
+    if (e.which !== 1 || !layerElem.current.contains(e.target as Node)) return;
     cursor.updateCapture(e);
     selection.updateCapture(e);
   }
@@ -41,9 +41,7 @@ function TextLayer() {
     }
   }, []);
 
-  useEffect(() => {
-    measure.textLayer = layerElem.current;
-  }, [layerElem.current])
+  useEffect(() => { reference.textLayer = layerElem.current }, [layerElem.current])
 
   return (
     <div ref={layerElem} className={s2.layer} style={{ height: measure.layerHeight + 'px' }}>

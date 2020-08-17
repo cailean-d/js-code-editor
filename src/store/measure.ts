@@ -4,20 +4,16 @@ import { IStore } from '@/interfaces/store';
 
 export default class Measure {
   @observable text = 'X';
-  @observable measureElement: HTMLElement;
-  @observable measureScrollElement: HTMLElement;
-  @observable textLayer: HTMLElement;
-  @observable inputElement: HTMLElement;
-  @observable editorElement: HTMLElement;
   @observable scrollTop: number;
 
   constructor(private store: IStore) {}
 
   @computed get symbolSize(): IDimension {
-    if (!this.measureElement) return { width: 0, height: 0 };
+    const { measureElement } = this.store.reference;
+    if (!measureElement) return { width: 0, height: 0 };
     return {
-      width: parseFloat(getComputedStyle(this.measureElement).width),
-      height: parseFloat(getComputedStyle(this.measureElement).height)
+      width: parseFloat(getComputedStyle(measureElement).width),
+      height: parseFloat(getComputedStyle(measureElement).height)
     };
   }
 
@@ -26,8 +22,9 @@ export default class Measure {
   }
 
   @computed get scrollWidth(): number {
-    if (!this.measureScrollElement) return 0;
-    return this.measureScrollElement.offsetWidth - this.measureScrollElement.clientWidth;
+    const { measureScrollElement } = this.store.reference;
+    if (!measureScrollElement) return 0;
+    return measureScrollElement.offsetWidth - measureScrollElement.clientWidth;
   }
 
 }

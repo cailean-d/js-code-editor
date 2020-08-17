@@ -6,6 +6,7 @@ import Measure from '@/store/measure';
 import Code from '@/store/code';
 import Gutter from '@/store/gutter';
 import Selection from '@/store/selection';
+import Reference from '@/store/reference';
 
 export const StoreContext = React.createContext<IStore>(null);
 
@@ -17,5 +18,6 @@ export function createStore(): IStore {
   store.gutter = new Gutter(store);
   store.cursor = new Cursor(store);
   store.selection = new Selection(store);
+  store.reference = new Reference();
   return store;
 }

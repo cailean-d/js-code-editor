@@ -148,7 +148,7 @@ export default class Cursor {
   }
 
   getCursorPositionByCoords(e: MouseEvent) {
-    const textLayerBox = this.store.measure.textLayer.getBoundingClientRect();
+    const textLayerBox = this.store.reference.textLayer.getBoundingClientRect();
     const x = e.pageX - textLayerBox.left;
     const y = e.pageY - textLayerBox.top;
     const row = this.normalizeRowPosition(y / this.store.measure.symbolSize.height);

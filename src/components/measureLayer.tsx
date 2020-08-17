@@ -7,10 +7,10 @@ import useStore from '@/hooks/useStore';
 function MeasureLayer() {
   const lineElem = useRef<HTMLDivElement>();
   const scrollElem = useRef<HTMLDivElement>();
-  const { measure } = useStore();
+  const { measure, reference } = useStore();
 
-  useEffect(() => { measure.measureElement = lineElem.current }, [lineElem.current])
-  useEffect(() => { measure.measureScrollElement = scrollElem.current }, [scrollElem.current])
+  useEffect(() => { reference.measureElement = lineElem.current }, [lineElem.current])
+  useEffect(() => { reference.measureScrollElement = scrollElem.current }, [scrollElem.current])
 
   return (
     <div className={s2.measureLayer}>

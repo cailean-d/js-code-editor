@@ -5,12 +5,12 @@ import s from './inputLayer.module.css';
 
 function InputLayer() {
   const inputElem = useRef<HTMLTextAreaElement>();
-  const { measure, cursor } = useStore();
+  const { measure, cursor, reference } = useStore();
 
-  useEffect(() => { measure.inputElement = inputElem.current }, [inputElem.current]);
+  useEffect(() => { reference.inputElement = inputElem.current }, [inputElem.current]);
 
-  const focus = () => measure.editorElement.classList.add('editor-focused');
-  const blur = () => measure.editorElement.classList.remove('editor-focused');
+  const focus = () => reference.editorElement.classList.add('editor-focused');
+  const blur = () => reference.editorElement.classList.remove('editor-focused');
 
   const style: React.CSSProperties = {
     top: cursor.upperCursor.row * measure.symbolSize.height + 'px',

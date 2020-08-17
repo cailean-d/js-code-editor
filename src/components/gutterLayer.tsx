@@ -7,7 +7,7 @@ function GutterLayer() {
   const layerElem = useRef<HTMLDivElement>();
   const { gutter, measure } = useStore();
 
-  const style = {
+  const lineStyle = {
     height: measure.symbolSize.height + 'px',
     width: gutter.width + 'px',
   }
@@ -20,14 +20,12 @@ function GutterLayer() {
     measure.scrollTop = (e.target as HTMLDivElement).scrollTop;
   }
 
-  useEffect(() => {
-    layerElem.current.scrollTop = measure.scrollTop;
-  }, [measure.scrollTop]);
+  useEffect(() => { layerElem.current.scrollTop = measure.scrollTop }, [measure.scrollTop]);
 
   return (
     <div ref={layerElem} className={s.gutterLayer} onScroll={handler} style={layerStyle}>
       {gutter.lines.map((_, i) => (
-        <div className={s.lineNumber} style={style}>{i + 1}</div>
+        <div className={s.lineNumber} style={lineStyle}>{i + 1}</div>
       ))}
     </div>
   )

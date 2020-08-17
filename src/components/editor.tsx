@@ -5,12 +5,12 @@ import s from './editor.module.css';
 
 function Editor({ children }) {
   const elem = useRef<HTMLDivElement>();
-  const { measure } = useStore();
+  const { reference } = useStore();
 
-  useEffect(() => { measure.editorElement = elem.current }, [elem.current]);
-  useEffect(() => { measure.inputElement?.focus() }, [measure.inputElement]);
+  useEffect(() => { reference.editorElement = elem.current }, [elem.current]);
+  useEffect(() => { reference.inputElement?.focus() }, [reference.inputElement]);
 
-  const focus = () => measure.inputElement?.focus();
+  const focus = () => reference.inputElement?.focus();
 
   return (
     <div ref={elem} onFocus={focus} className={s.editor} tabIndex={0}>

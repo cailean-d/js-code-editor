@@ -4,6 +4,7 @@ import Measure from '@/store/measure';
 import Code from '@/store/code';
 import Gutter from '@/store/gutter';
 import Selection from '@/store/selection';
+import Reference from '@/store/reference';
 
 export interface IStore {
   cursor?: Cursor;
@@ -12,4 +13,5 @@ export interface IStore {
   code?: Code;
   gutter?: Gutter;
   selection?: Selection;
+  reference?: Reference;
 }
