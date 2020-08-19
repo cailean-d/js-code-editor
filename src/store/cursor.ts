@@ -1,7 +1,8 @@
 import { observable, action, computed } from 'mobx';
+import { range } from '@/utils/range';
 import { ICursor } from '@/interfaces/cursor';
 import { IStore } from '@/interfaces/store';
-import { range } from '@/utils/range';
+import { ISelection } from '@/interfaces/selection';
 
 export default class Cursor {
   @observable items: ICursor[] = [];
@@ -57,6 +58,10 @@ export default class Cursor {
 
   @action removeCursor(row: number, column: number) {
     this.items = this.items.filter(item => item.row !== row || item.column !== column);
+  }
+
+  @action removeCursorRef(cursor: ICursor) {
+    this.items = this.items.filter(item => item !== cursor);
   }
 
   @action removeExtraCursors() {
@@ -186,6 +191,35 @@ export default class Cursor {
     cursor.column -= offset;
   }
 
+  isCursorIntersectsSelection(cursor: ICursor, selection: ISelection) {
+    const [start, end] = this.store.selection.normalizePosition(selection.start, selection.end);
+
+    if (cursor.row > start.row && cursor.row < end.row) {
+      return true;
+    }
+
+    const first = selection.lines[0];
+    const last = selection.lines[selection.lines.length - 1];
+
+    if (
+      cursor.row === start.row &&
+      cursor.column >= first.columnStart &&
+      cursor.column <= first.columnEnd
+    ) {
+      return true;
+    }
+
+    if (
+      cursor.row === end.row &&
+      cursor.column >= last.columnStart &&
+      cursor.column <= last.columnEnd
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   private normalizeRowPosition(row: number) {
     const floatPart = +(row % 1).toFixed(1) * 10;
     if (floatPart > 7) {
@@ -197,10 +231,5 @@ export default class Cursor {
 
   private normalizeColumnPosition(column: number) {
     return Math.round(column);
-  }
-
-
-  private isCursorIntersectsSelection(cursor: ICursor, selection) {
-
   }
 }

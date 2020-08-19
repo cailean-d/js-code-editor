@@ -46,7 +46,35 @@ export default class Selection {
     this.items.push({ start, end, length: 0, lines: [] });
     const selection = this.getSelection(start, end);
     this.updateSelection(selection);
+    this.removeIntersectedCursors(selection);
     this.store.cursor.addCursor(selection.end.row, selection.end.column);
+  }
+
+  @action addSelectionRange(start: number, end: number) {
+    const codeLines = this.store.code.codeLines;
+    const length = end - start;
+    const startPos = this.getRangeStartPosition(start);
+    const affectedLines = codeLines.slice(startPos.row);
+    let lines: ISelectionLine[] = [];
+    let endPos: IPosition, len = length;
+
+    for (const [i, line] of affectedLines.entries()) {
+      const row = startPos.row + i;
+      const columnStart = startPos.row === row ? startPos.column : 0;
+
+      if (line.length - columnStart >= len) {
+        lines.push({ row, columnStart, columnEnd: columnStart + len });
+        endPos = { row, column: columnStart + len };
+        break;
+      }
+
+      lines.push({ row, columnStart, columnEnd: line.length });
+      len -= line.length - columnStart;
+    }
+    const selection = { start: startPos, end: endPos, length, lines };
+    this.items.push(selection);
+    this.removeIntersectedCursors(selection);
+    this.store.cursor.addCursor(endPos.row, endPos.column);
   }
 
   @action updateSelection(selection: ISelection) {
@@ -85,31 +113,6 @@ export default class Selection {
       selection.length = length;
       selection.lines = lines;
     }
-  }
-
-  @action addSelectionRange(start: number, end: number) {
-    const codeLines = this.store.code.codeLines;
-    const length = end - start;
-    const startPos = this.getRangeStartPosition(start);
-    const affectedLines = codeLines.slice(startPos.row);
-    let lines: ISelectionLine[] = [];
-    let endPos: IPosition, len = length;
-
-    for (const [i, line] of affectedLines.entries()) {
-      const row = startPos.row + i;
-      const columnStart = startPos.row === row ? startPos.column : 0;
-
-      if (line.length - columnStart >= len) {
-        lines.push({ row, columnStart, columnEnd: columnStart + len });
-        endPos = { row, column: columnStart + len };
-        break;
-      }
-
-      lines.push({ row, columnStart, columnEnd: line.length });
-      len -= line.length - columnStart;
-    }
-    this.items.push({ start: startPos, end: endPos, length, lines });
-    this.store.cursor.addCursor(endPos.row, endPos.column);
   }
 
   @action setSelection(start: IPosition, end: IPosition) {
@@ -191,6 +194,7 @@ export default class Selection {
     const pos = this.store.cursor.getCursorPositionByCoords(e);
     this.captured.end = pos;
     this.updateSelection(this.captured);
+    this.removeIntersectedCursors(this.captured);
   }
 
   @action stopCapture(_: MouseEvent) {
@@ -201,16 +205,16 @@ export default class Selection {
     this.captured = null;
   }
 
+  normalizePosition(start: IPosition, end: IPosition) {
+    return [start, end].sort((a, b) => a.row - b.row || a.column - b.column);
+  }
+
   private normalizePositionRows(start: IPosition, end: IPosition) {
     return [start, end].sort((a, b) => a.row - b.row);
   }
 
   private normalizePositionColumns(start: IPosition, end: IPosition) {
     return [start, end].sort((a, b) => a.column - b.column);
-  }
-
-  private normalizePosition(start: IPosition, end: IPosition) {
-    return [start, end].sort((a, b) => a.row - b.row || a.column - b.column);
   }
 
   private getRangeStartPosition(start: number): IPosition {
@@ -251,5 +255,14 @@ export default class Selection {
     start.column -= offset;
     if (start.row === end.row)
       end.column -= offset;
+  }
+
+  @action private removeIntersectedCursors(selection: ISelection) {
+    const c = this.store.cursor;
+    for (const cursor of c.items) {
+      if (cursor !== c.captured && c.isCursorIntersectsSelection(cursor, selection)) {
+        c.removeCursorRef(cursor);
+      }
+    }
   }
 }
