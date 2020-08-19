@@ -46,8 +46,6 @@ export default class Selection {
     this.items.push({ start, end, length: 0, lines: [] });
     const selection = this.getSelection(start, end);
     this.updateSelection(selection);
-    this.removeIntersectedCursors(selection);
-    this.removeIntersectedSelections(selection);
     this.store.cursor.addCursor(selection.end.row, selection.end.column);
   }
 
@@ -76,6 +74,8 @@ export default class Selection {
     this.items.push(selection);
     this.removeIntersectedCursors(selection);
     this.removeIntersectedSelections(selection);
+    this.addSelectionCorners(selection);
+    this.addExtraSpace(selection);
     this.store.cursor.addCursor(endPos.row, endPos.column);
   }
 
@@ -117,6 +117,8 @@ export default class Selection {
     }
     this.removeIntersectedCursors(selection);
     this.removeIntersectedSelections(selection);
+    this.addSelectionCorners(selection);
+    this.addExtraSpace(selection);
   }
 
   @action setSelection(start: IPosition, end: IPosition) {
@@ -296,5 +298,18 @@ export default class Selection {
     }
 
     return false;
+  }
+
+  @action private addExtraSpace(selection: ISelection) {
+    for (const line of selection.lines) {
+      const cursor = this.getSelectionCursor(selection);
+      const maxCols = this.store.code.codeLines[line.row].length;
+      const isHitCursor = cursor.row === line.row && cursor.column === line.columnEnd;
+      line.extraSpace = line.columnEnd === maxCols && !isHitCursor;
+    }
+  }
+
+  @action private addSelectionCorners(selection: ISelection) {
+
   }
 }

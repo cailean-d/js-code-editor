@@ -8,11 +8,12 @@ function SelectionLayer() {
   const { measure, selection } = useStore();
 
   const lineStyle = (line: ISelectionLine): React.CSSProperties => {
+    const space = line.extraSpace ? 1 : 0;
     return {
       top: line.row * measure.symbolSize.height +  'px',
       left: line.columnStart * measure.symbolSize.width +  'px',
       height: measure.symbolSize.height + 'px',
-      width: (line.columnEnd - line.columnStart) * measure.symbolSize.width + 'px',
+      width: (line.columnEnd - line.columnStart + space) * measure.symbolSize.width + 'px',
     }
   }
 

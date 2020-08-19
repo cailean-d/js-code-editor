@@ -11,4 +11,16 @@ export interface ISelectionLine {
   row: number;
   columnStart: number;
   columnEnd: number;
+  extraSpace?: boolean;
+  corners?: ISelectionCorners;
+}
+
+export interface ISelectionCorners {
+  leftTop: boolean;
+  leftBottom: boolean;
+  rightTop: boolean;
+  rightBottom: boolean;
+  negativeLeftBottom: boolean;
+  negativeRightTop: boolean;
+  negativeRightBottom: boolean;
 }
