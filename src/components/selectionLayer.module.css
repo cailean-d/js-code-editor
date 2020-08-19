@@ -3,7 +3,7 @@
 }
 
 .selectedText {
-  background-color: rgba(114, 124, 146, 0.21);
+  background-color: var(--selection-color);
   position: absolute;
 }
 
@@ -32,17 +32,23 @@
 .selectedText .cornerNegative.rightBottom {
   left: 100%;
   bottom: 0;
-  /* background: url(assets/corner-right-bottom.svg); */
 }
 
 .selectedText .cornerNegative.leftBottom {
   right: 100%;
   bottom: 0;
-  /* background: url(assets/corner-left-bottom.svg); */
 }
 
 .selectedText .cornerNegative.rightTop {
   left: 100%;
   top: 0;
-  /* background: url(assets/corner-right-top.svg); */
+}
+
+.cornerSvg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  fill: var(--selection-color);
 }

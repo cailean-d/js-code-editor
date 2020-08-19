@@ -16,11 +16,13 @@ export interface ISelectionLine {
 }
 
 export interface ISelectionCorners {
-  leftTop: boolean;
-  leftBottom: boolean;
-  rightTop: boolean;
-  rightBottom: boolean;
-  negativeLeftBottom: boolean;
-  negativeRightTop: boolean;
-  negativeRightBottom: boolean;
+  leftTop?: boolean;
+  leftBottom?: boolean;
+  rightTop?: boolean;
+  rightBottom?: boolean;
+  negative?: {
+    leftBottom?: boolean;
+    rightTop?: boolean;
+    rightBottom?: boolean;
+  }
 }

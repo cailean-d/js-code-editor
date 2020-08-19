@@ -310,6 +310,50 @@ export default class Selection {
   }
 
   @action private addSelectionCorners(selection: ISelection) {
+    for (const [i, line] of selection.lines.entries()) {
+      const current = line;
+      const prev = i > 0 ? selection.lines[i - 1] : null;
+      line.corners = {};
+      line.corners.negative = {};
 
+      line.corners.leftBottom = true;
+      line.corners.rightBottom = true;
+
+      if (!prev || prev.columnStart > current.columnEnd) {
+        line.corners.leftTop = true;
+        line.corners.rightTop = true;
+      }
+
+      if (prev && current.columnEnd > prev.columnEnd) {
+        prev.corners.rightBottom = false;
+        prev.corners.negative.rightBottom = true;
+        current.corners.rightTop = true;
+      }
+
+      if (prev && current.columnEnd === prev.columnEnd) {
+        prev.corners.rightBottom = false;
+      }
+
+      if (prev && current.columnStart < prev.columnStart) {
+        if (prev.columnStart < current.columnEnd) {
+          prev.corners.leftBottom = false;
+          prev.corners.negative.leftBottom = true;
+        }
+        current.corners.leftTop = true;
+      }
+
+      if (prev && current.columnStart === prev.columnStart) {
+        prev.corners.leftBottom = false;
+      }
+
+      if (
+        prev &&
+        current.columnEnd >= prev.columnStart &&
+        current.columnEnd < prev.columnEnd &&
+        (current.columnEnd - current.columnStart > 0 || i < selection.lines.length - 1)
+      ) {
+        current.corners.negative.rightTop = true;
+      }
+    }
   }
 }
