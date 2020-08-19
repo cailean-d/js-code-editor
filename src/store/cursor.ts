@@ -178,6 +178,14 @@ export default class Cursor {
     return this.getActualCursorPosition(row, column);
   }
 
+  @action moveCursorUp(cursor: ICursor, offset = 1) {
+    cursor.row -= offset;
+  }
+
+  @action moveCursorLeft(cursor: ICursor, offset = 1) {
+    cursor.column -= offset;
+  }
+
   private normalizeRowPosition(row: number) {
     const floatPart = +(row % 1).toFixed(1) * 10;
     if (floatPart > 7) {
@@ -190,6 +198,7 @@ export default class Cursor {
   private normalizeColumnPosition(column: number) {
     return Math.round(column);
   }
+
 
   private isCursorIntersectsSelection(cursor: ICursor, selection) {
 

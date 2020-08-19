@@ -3,6 +3,7 @@ import { IStore } from '@/interfaces/store';
 import { ISelection } from '@/interfaces/selection';
 import { IPosition } from '@/interfaces/measure';
 import { ISelectionLine } from '@/interfaces/selection';
+import { ICursor } from '@/interfaces/cursor';
 
 export default class Selection {
   @observable items: ISelection[] = [];
@@ -45,6 +46,7 @@ export default class Selection {
     this.items.push({ start, end, length: 0, lines: [] });
     const selection = this.getSelection(start, end);
     this.updateSelection(selection);
+    this.store.cursor.addCursor(selection.end.row, selection.end.column);
   }
 
   @action updateSelection(selection: ISelection) {
@@ -99,6 +101,7 @@ export default class Selection {
 
       if (line.length - columnStart >= len) {
         lines.push({ row, columnStart, columnEnd: columnStart + len });
+        endPos = { row, column: columnStart + len };
         break;
       }
 
@@ -106,6 +109,7 @@ export default class Selection {
       len -= line.length - columnStart;
     }
     this.items.push({ start: startPos, end: endPos, length, lines });
+    this.store.cursor.addCursor(endPos.row, endPos.column);
   }
 
   @action setSelection(start: IPosition, end: IPosition) {
@@ -136,7 +140,44 @@ export default class Selection {
   }
 
   @action clearSelectionText() {
+    for (const selection of this.items) {
+      const cursor = this.getSelectionCursor(selection);
+      const [start, end] = this.normalizePosition(selection.start, selection.end);
+      const firstLine = this.store.code.codeLines[start.row];
+      const lastLine = this.store.code.codeLines[end.row];
+      const substr1 = firstLine.substring(0, start.column);
+      const substr2 = lastLine.substring(end.column);
+      this.store.code.codeLines[start.row] = substr1 + substr2;
+      this.store.code.codeLines.splice(start.row + 1, selection.lines.length - 1);
+      this.store.cursor.setCursor(cursor, start.row, start.column);
+      this.rebaseSelections(selection);
+    }
+    this.removeAll();
+  }
 
+  @action rebaseSelections(_selection: ISelection) {
+    const Voffset = _selection.lines.length - 1;
+    const [_start, _end] = this.normalizePosition(_selection.start, _selection.end);
+    for (const selection of this.items) {
+      if (_selection === selection) continue;
+      const cursor = this.getSelectionCursor(selection);
+      const [start] = this.normalizePosition(selection.start, selection.end);
+      const isBottomToTop = _end.row === start.row;
+      const isLeftToRight = _end.column < start.column;
+
+      if (isBottomToTop && isLeftToRight) {
+        const Hoffset = _end.column - _start.column;
+        this.moveFistLineLeft(selection, Hoffset);
+        if (cursor.row === _end.row) {
+          this.store.cursor.moveCursorLeft(cursor, Hoffset);
+        }
+      }
+
+      if (_end.row <= start.row) {
+        this.moveSelectionUp(selection, Voffset);
+        this.store.cursor.moveCursorUp(cursor, Voffset);
+      }
+    }
   }
 
   @action startCapture(e: MouseEvent) {
@@ -168,6 +209,10 @@ export default class Selection {
     return [start, end].sort((a, b) => a.column - b.column);
   }
 
+  private normalizePosition(start: IPosition, end: IPosition) {
+    return [start, end].sort((a, b) => a.row - b.row || a.column - b.column);
+  }
+
   private getRangeStartPosition(start: number): IPosition {
     let index = 0, codeLines = this.store.code.codeLines;
     while (start > codeLines[index].length) {
@@ -177,7 +222,34 @@ export default class Selection {
     return { row: index, column: start };
   }
 
-  private getSelectionCursor() {
+  private getSelectionCursor(selection: ISelection): ICursor {
+    for (const cursor of this.store.cursor.items) {
+      const start = cursor.row === selection.start.row && cursor.column === selection.start.column;
+      const end = cursor.row === selection.end.row && cursor.column === selection.end.column;
+      if (start || end) {
+        return cursor;
+      }
+    }
+  }
 
+  private moveSelectionUp(selection: ISelection, offset = 1) {
+    const firstLine = selection.lines[0];
+    if (firstLine.row - offset < 0) return;
+    for (const line of selection.lines) {
+      line.row -= offset;
+    }
+    selection.start.row -= offset;
+    selection.end.row -= offset;
+  }
+
+  private moveFistLineLeft(selection: ISelection, offset = 1) {
+    const firstLine = selection.lines[0];
+    const [start, end] = this.normalizePosition(selection.start, selection.end);
+    if (firstLine.columnStart - offset < 0) return;
+    firstLine.columnStart -= offset;
+    firstLine.columnEnd -= offset;
+    start.column -= offset;
+    if (start.row === end.row)
+      end.column -= offset;
   }
 }
