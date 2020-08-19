@@ -47,6 +47,7 @@ export default class Selection {
     const selection = this.getSelection(start, end);
     this.updateSelection(selection);
     this.removeIntersectedCursors(selection);
+    this.removeIntersectedSelections(selection);
     this.store.cursor.addCursor(selection.end.row, selection.end.column);
   }
 
@@ -74,6 +75,7 @@ export default class Selection {
     const selection = { start: startPos, end: endPos, length, lines };
     this.items.push(selection);
     this.removeIntersectedCursors(selection);
+    this.removeIntersectedSelections(selection);
     this.store.cursor.addCursor(endPos.row, endPos.column);
   }
 
@@ -113,6 +115,8 @@ export default class Selection {
       selection.length = length;
       selection.lines = lines;
     }
+    this.removeIntersectedCursors(selection);
+    this.removeIntersectedSelections(selection);
   }
 
   @action setSelection(start: IPosition, end: IPosition) {
@@ -194,7 +198,6 @@ export default class Selection {
     const pos = this.store.cursor.getCursorPositionByCoords(e);
     this.captured.end = pos;
     this.updateSelection(this.captured);
-    this.removeIntersectedCursors(this.captured);
   }
 
   @action stopCapture(_: MouseEvent) {
@@ -264,5 +267,34 @@ export default class Selection {
         c.removeCursorRef(cursor);
       }
     }
+  }
+
+  @action private removeIntersectedSelections(selection: ISelection) {
+    for (const s of this.items) {
+      if (s !== selection && this.isSelectionIntersected(selection, s)) {
+        this.removeSelection(s);
+      }
+    }
+  }
+
+  private isSelectionIntersected(selection1: ISelection, selection2: ISelection) {
+    if (selection1.length === 0 || selection2.length === 0) return false;
+
+    const top1 = selection1.lines[0];
+    const top2 = selection2.lines[0];
+    const bottom1 = selection1.lines[selection1.lines.length-1];
+    const bottom2 = selection2.lines[selection2.lines.length-1];
+
+    const vertically = bottom1.row > top2.row && top1.row < bottom2.row;
+    const horizontally1 = bottom1.columnEnd > top2.columnStart && bottom1.columnStart < top2.columnEnd;
+    const horizontally2 = bottom2.columnEnd > top1.columnStart && bottom2.columnStart < top1.columnEnd;
+    const bottomWithTop = bottom1.row === top2.row && horizontally1;
+    const topWithBottom = top1.row === bottom2.row && horizontally2;
+
+    if (vertically || bottomWithTop || topWithBottom) {
+      return true;
+    }
+
+    return false;
   }
 }
