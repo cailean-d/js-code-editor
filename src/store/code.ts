@@ -61,8 +61,8 @@ export default class Code {
     }
     for (const cursor of this.store.cursor.items) {
       const line = this.codeLines[cursor.row];
-      const { newLine, substr2 } = this.splitLine(line, cursor.column, cursor.column, '');
-      this.codeLines[cursor.row] = newLine;
+      const { substr1, substr2 } = this.splitLine(line, cursor.column, cursor.column, '');
+      this.codeLines[cursor.row] = substr1;
       this.codeLines.splice(cursor.row + 1, 0, substr2);
       this.store.cursor.increaseCursorRow(cursor);
       this.store.cursor.resetCursorColumn(cursor);
