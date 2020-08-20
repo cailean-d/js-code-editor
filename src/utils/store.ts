@@ -7,6 +7,7 @@ import Code from '@/store/code';
 import Gutter from '@/store/gutter';
 import Selection from '@/store/selection';
 import Reference from '@/store/reference';
+import Keymap from '@/store/keymap';
 
 export const StoreContext = React.createContext<IStore>(null);
 
@@ -19,5 +20,6 @@ export function createStore(): IStore {
   store.cursor = new Cursor(store);
   store.selection = new Selection(store);
   store.reference = new Reference();
+  store.keymap = new Keymap();
   return store;
 }

@@ -46,7 +46,6 @@ export default class Selection {
     this.items.push({ start, end, length: 0, lines: [] });
     const selection = this.getSelection(start, end);
     this.updateSelection(selection);
-    this.store.cursor.addCursor(selection.end.row, selection.end.column);
   }
 
   @action addSelectionRange(start: number, end: number) {
@@ -70,13 +69,13 @@ export default class Selection {
       lines.push({ row, columnStart, columnEnd: line.length });
       len -= line.length - columnStart;
     }
-    const selection = { start: startPos, end: endPos, length, lines };
-    this.items.push(selection);
+    this.items.push({ start: startPos, end: endPos, length, lines });
+    const selection = this.getSelection(startPos, endPos);
     this.removeIntersectedCursors(selection);
     this.removeIntersectedSelections(selection);
+    this.store.cursor.addCursor(endPos.row, endPos.column);
     this.addSelectionCorners(selection);
     this.addExtraSpace(selection);
-    this.store.cursor.addCursor(endPos.row, endPos.column);
   }
 
   @action updateSelection(selection: ISelection) {
@@ -117,6 +116,7 @@ export default class Selection {
     }
     this.removeIntersectedCursors(selection);
     this.removeIntersectedSelections(selection);
+    this.store.cursor.addCursor(selection.end.row, selection.end.column);
     this.addSelectionCorners(selection);
     this.addExtraSpace(selection);
   }

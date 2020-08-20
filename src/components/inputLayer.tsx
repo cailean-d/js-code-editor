@@ -5,12 +5,27 @@ import s from './inputLayer.module.css';
 
 function InputLayer() {
   const inputElem = useRef<HTMLTextAreaElement>();
-  const { measure, cursor, reference } = useStore();
+  const { measure, cursor, reference, keymap, code, selection } = useStore();
+
+  useEffect(() => {
+    keymap.onText(text => code.inputText(text));
+    keymap.addCommand('ArrowLeft', () => cursor.decreaseAllColumns());
+    keymap.addCommand('ArrowRight', () => cursor.increaseAllColumns());
+    keymap.addCommand('ArrowUp', () => cursor.decreaseAllRows());
+    keymap.addCommand('ArrowDown', () => cursor.increaseAllRows());
+    keymap.addCommand('Backspace', () => code.removeText());
+    keymap.addCommand('Space', () => code.inputText(' '));
+    keymap.addCommand('Tab', () => code.indentIn());
+    keymap.addCommand('Shift+Tab', () => code.indentOut());
+    keymap.addCommand('Enter', () => code.newline());
+    keymap.addCommand('Ctrl+A', () => selection.selectAll());
+  }, []);
 
   useEffect(() => { reference.inputElement = inputElem.current }, [inputElem.current]);
 
   const focus = () => reference.editorElement.classList.add('editor-focused');
   const blur = () => reference.editorElement.classList.remove('editor-focused');
+  const keydown = (e: React.KeyboardEvent) => keymap.processInput(e);
 
   const style: React.CSSProperties = {
     top: cursor.upperCursor.row * measure.symbolSize.height + 'px',
@@ -28,6 +43,7 @@ function InputLayer() {
         tabIndex={-1}
         onFocus={focus}
         onBlur={blur}
+        onKeyDown={keydown}
         style={style}
       ></textarea>
     </div>

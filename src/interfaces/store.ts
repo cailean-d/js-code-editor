@@ -5,6 +5,7 @@ import Code from '@/store/code';
 import Gutter from '@/store/gutter';
 import Selection from '@/store/selection';
 import Reference from '@/store/reference';
+import Keymap from '@/store/keymap';
 
 export interface IStore {
   cursor?: Cursor;
@@ -14,4 +15,5 @@ export interface IStore {
   gutter?: Gutter;
   selection?: Selection;
   reference?: Reference;
+  keymap?: Keymap;
 }
